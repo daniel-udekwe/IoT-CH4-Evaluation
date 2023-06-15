@@ -1,8 +1,16 @@
 #include <SPI.h>
 #include <LoRa.h>
 
+    #include <DS3231.h>
+    #include <Wire.h>
+    
 const byte MQ4_Pin = A0;
 const int R_O = 945;
+
+    DS3231 clock;
+    bool century = false;
+    bool h12Flag;
+    bool pmFlag;
 
 void setup() {
   // put your setup code here, to run once:
@@ -18,11 +26,18 @@ void setup() {
 void loop() {
   Serial.println(getMethanePPM2());
   Serial.println(getMethanePPM());
-  Serial.println(" ");
+
+      int hrs = clock.getHour(h12Flag, pmFlag);
+      int mts = clock.getMinute();
+      int sec = clock.getSecond();
+      String currentTime = String(hrs) + ":" + String(mts) + ":" + String(sec);
+      Serial.println(currentTime);
   
+  Serial.println(" ");
   LoRa.beginPacket();
   LoRa.print('+');
   LoRa.print((float)max(getMethanePPM(), getMethanePPM2()));
+        LoRa.print(currentTime);
   LoRa.endPacket();
   delay(500);
   
