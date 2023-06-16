@@ -15,6 +15,8 @@ const int R_O = 945;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600); 
+  Wire.begin();
+
   //while (!Serial);  
 
   if (!LoRa.begin(915E6)) {
@@ -36,6 +38,7 @@ void loop() {
   Serial.println(" ");
   LoRa.beginPacket();
   LoRa.print((float)max(getMethanePPM(), getMethanePPM2()));
+      LoRa.print(", ");
       LoRa.print(currentTime);
   LoRa.endPacket();
   delay(500);

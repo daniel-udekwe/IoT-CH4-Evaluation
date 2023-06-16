@@ -58,9 +58,9 @@ void loop() {
       if (myFile) {
         myFile.print(data);
         
-        lcd.setCursor(1,1);
-        lcd.print("Node 1: ");
-        lcd.setCursor(8,1);
+        lcd.setCursor(0,1);
+        lcd.print("a): ");
+        lcd.setCursor(3,1);
         if (data[0] != '+')
         {
         lcd.print(" +");
@@ -68,15 +68,15 @@ void loop() {
         //lcd.setCursor(14,1);
         //lcd.print("PPM");
         //lcd.print(" +Sync");
-        lcd.setCursor(16,1);
-        lcd.print(LoRa.packetRssi());
+            //lcd.setCursor(16,1);
+            //lcd.print(LoRa.packetRssi());
         }
 
 
         
-        lcd.setCursor(1,2);
-        lcd.print("Node 2: ");
-        lcd.setCursor(8,2);
+        lcd.setCursor(0,2);
+        lcd.print("b): ");
+        lcd.setCursor(3,2);
         if (data[0] == '+')
         { 
         lcd.print(" ");
@@ -84,19 +84,22 @@ void loop() {
         //lcd.setCursor(14,2);
         //lcd.print("PPM");
         //lcd.print(" +Sync");
-        lcd.setCursor(16,2);
-        lcd.print(LoRa.packetRssi());
+          //lcd.setCursor(16,2);
+          //lcd.print(LoRa.packetRssi());
         }
 
         
-        lcd.setCursor(1,3);
-        lcd.print("Node 3: ");
+        lcd.setCursor(0,3);
+        lcd.print("RSSI: ");
+        lcd.setCursor(6, 3);
+        lcd.print(LoRa.packetRssi());
 
         myFile.print(", ");
-        myFile.print(LoRa.packetRssi());
-        myFile.print(", ");
+        myFile.println(LoRa.packetRssi());
+        delay(500);
+        /*myFile.print(", ");
         myFile.print(millis());
-        myFile.println(" milli");
+        myFile.println(" milli");*/
 
        /* myFile.print(", ");
         myFile.print(data);
