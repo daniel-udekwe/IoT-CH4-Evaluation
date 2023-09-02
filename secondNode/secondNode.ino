@@ -23,6 +23,7 @@ void setup() {
     Serial.println("Starting LoRa failed!");
     while (1);
   } 
+
 }
 
 void loop() {
