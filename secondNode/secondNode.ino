@@ -1,11 +1,17 @@
 #include <SPI.h>
 #include <LoRa.h>
-
+#include <SD.h>
 #include <DS3231.h>
 #include <Wire.h>
     
 const byte MQ4_Pin = A0;
 const int R_O = 945;
+
+#define SS_PIN 4
+#define RST_PIN 9
+#define DI0_PIN 2
+
+File myFile;
 
 DS3231 clock;
 bool century = false;
@@ -19,10 +25,17 @@ void setup() {
 
   //while (!Serial);  
 
+/*
   if (!LoRa.begin(915E6)) {
     Serial.println("Starting LoRa failed!");
     while (1);
   } 
+*/
+  if (!SD.begin(SS_PIN)) {
+    Serial.println("Starting SD card failed!");
+    while (1);
+  }
+  Serial.println("SD card initialized.");
 
 }
 
@@ -30,12 +43,18 @@ void loop() {
   Serial.println(getMethanePPM2());
   Serial.println(getMethanePPM());
 
+  int yr = clock.getYear();
+  int mon = clock.getMonth(century);
+  int dy = clock.getDate();
+
   int hrs = clock.getHour(h12Flag, pmFlag);
   int mts = clock.getMinute();
   int sec = clock.getSecond();
-  String currentTime = String(hrs) + ":" + String(mts) + ":" + String(sec);
+
+  String currentTime = String(hrs) + ":" + String(mts) + ":" + String(sec) + "/" + String(yr) + "-" + String(mon) + "-" + String(dy);
   Serial.println(currentTime);
-  
+
+ /* 
   Serial.println(" ");
   LoRa.beginPacket();
   LoRa.print('+');
@@ -43,6 +62,24 @@ void loop() {
   LoRa.print(", ");
   LoRa.print(currentTime);
   LoRa.endPacket();
+*/
+
+  myFile = SD.open("data.txt", FILE_WRITE);
+  if (myFile) {
+    //myFile.print((float)max(getMethanePPM(), getMethanePPM2()));
+    myFile.print((float)getMethanePPM());
+    myFile.print(", ");
+    myFile.print((float)getMethanePPM2());
+    myFile.print(", ");
+    myFile.print(currentTime);
+    myFile.print(", ");
+    myFile.println(LoRa.packetRssi());
+    delay(500);
+    myFile.close();
+    Serial.println("Data saved to SD card.");
+  } else {
+    Serial.println("Error opening data.txt");
+  }
   delay(500);
   
 }

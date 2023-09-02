@@ -69,7 +69,7 @@ void loop() {
   LoRa.endPacket();
 */
 
-  myFile = SD.open("data.txt", FILE_WRITE);
+   myFile = SD.open("data.txt", FILE_WRITE);
   if (myFile) {
     //myFile.print((float)max(getMethanePPM(), getMethanePPM2()));
     myFile.print((float)getMethanePPM());
